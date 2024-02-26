@@ -100,7 +100,7 @@ trait RestfulResponse
                 // paginate 分页列表
                 if (is_countable($data) && $data instanceof LengthAwarePaginator) {
                     $msgpack['data']['list'] = Arr::get($data->toArray(), 'data', []);
-                    $msgpack['meta'] = [
+                    $msgpack['data']['meta'] = [
                         'total' => $data->total(),
                         'current_page' => $data->currentPage(),
                         'per_page' => intval($data->perPage()),
