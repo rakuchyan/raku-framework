@@ -30,8 +30,8 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
+            $table->comment('用户表');
         });
-        Illuminate\Support\Facades\DB::statement("ALTER TABLE `users` COMMENT='用户表'"); // 表注释
     }
 
     /**

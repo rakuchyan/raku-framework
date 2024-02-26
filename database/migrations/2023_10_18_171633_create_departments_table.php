@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('name_en')->default('')->comment('英文部门名称'); // 英文部门名称
             $table->unsignedBigInteger('parent_id')->nullable()->default(0); // 上级部门
             $table->timestamps();
+            $table->comment('部门表');
         });
-        Illuminate\Support\Facades\DB::statement("ALTER TABLE `departments` COMMENT='部门表'");
     }
 
     /**
