@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,6 +15,10 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
+/**
+ * @property int $id
+ * @property int $status
+ */
 class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasRoles;
@@ -33,7 +39,8 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $hidden = [
         'password',
-        'remember_token',
+        'deleted_at',
+        'token',
     ];
 
     /**
@@ -42,7 +49,6 @@ class User extends Authenticatable implements JWTSubject
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
         'created_at',
         'updated_at',
     ];
@@ -81,5 +87,50 @@ class User extends Authenticatable implements JWTSubject
     protected function serializeDate(\DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+    /**
+     * 添加时间
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed $start 开始时间
+     * @param mixed $end 结束时间
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCreatedAtTimeRange($query, $start, $end)
+    {
+        if (!empty($start)) {
+            $startDay = Carbon::parse($start, 'PRC')->utc()->startOfDay();
+            $query->where('created_at', '>=', $startDay);
+        }
+
+        if (!empty($end)) {
+            $endDay = Carbon::parse($end, 'PRC')->utc()->endOfDay();
+            $query->where('created_at', '<=', $endDay);
+        }
+
+        return $query;
+    }
+
+
+    /**
+     * queryBuilder
+     * @Author raku
+     *
+     * @param Builder $builder
+     * @param $start
+     * @param $end
+     * @return void
+     */
+    public function scopeCreatedAtBetween(Builder $builder, $start = null, $end = null): void
+    {
+        try {
+            if ($start) {
+                $builder->where('created_at', '>=', Carbon::parse($start, 'PRC')->utc());
+            }
+            if ($end) {
+                $builder->where('created_at', '<=', Carbon::parse($end, 'PRC')->utc());
+            }
+        } catch (\Throwable $exception) {
+        }
     }
 }

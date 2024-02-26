@@ -3,6 +3,8 @@
 namespace App\Http;
 
 use App\Http\Middleware\AcceptHeader;
+use App\Http\Middleware\AdminActionLog;
+use App\Http\Middleware\CheckAdminUser;
 use App\Http\Middleware\CheckUser;
 use App\Http\Middleware\UserMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -49,6 +51,11 @@ class Kernel extends HttpKernel
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
+
+        'admin' => [
+            AcceptHeader::class, // 强制 json header 头
+            AdminActionLog::class, // 日志
+        ]
     ];
 
     /**
@@ -76,6 +83,7 @@ class Kernel extends HttpKernel
 
         // 验证用户
         'check.user' => CheckUser::class,
+        'check.admin.user' => CheckAdminUser::class,
 
     ];
 }

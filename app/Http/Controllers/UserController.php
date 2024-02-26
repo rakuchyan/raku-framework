@@ -9,6 +9,7 @@ use App\Traits\RestfulResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
@@ -33,12 +34,21 @@ class UserController extends Controller
         $userId = $request->id;
     }
 
+    /**
+     * 个人用户信息
+     * @Author raku
+     *
+     * @return JsonResponse
+     */
     public function info(): JsonResponse
     {
         /**
          * @var User $user
          */
         $user = auth()->user();
+
+        // 部门
+        $user->department = $user->loadMissing(['department:id,name,parent_id','department.parent:id,name']);
 
         // 当前用户权限
         $user->role_name = $user->getRoleNames();
@@ -48,7 +58,6 @@ class UserController extends Controller
             })->toArray();
         // 隐藏角色
         $user->makeHidden(['permissions', 'roles']);
-        $user->department = $user->department()->firstOrNew()->only(['name', 'name_en']);
 
         return $this->success($user);
     }
@@ -119,6 +128,76 @@ class UserController extends Controller
             info('导入失败.' . $e->getMessage());
             return $this->error('导入失败');
         }
+    }
+
+    /**
+     * 个人修改信息
+     * @Author raku
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function editInfo(Request $request): JsonResponse
+    {
+        $rules = [
+            'avatar' => 'nullable|string|max:200',
+        ];
+        $validated = $request->validate($rules);
+
+        $user = auth()->user();
+        $user->avatar = $validated['avatar'];
+        $user->save();
+
+        return $this->success();
+    }
+
+    /**
+     * 个人重置密码
+     * @Author raku
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function resetPassword(Request $request): JsonResponse
+    {
+        $rules = [
+            'new_password' => 'required|min:8',
+            'old_password' => 'required',
+        ];
+        $validated = $request->validate($rules, [
+            'password.required' => '修改密码不能为空',
+            'old_password.required' => '旧密码不能为空',
+        ]);
+
+        $password = $validated['new_password'];
+        $oldPassword = $validated['old_password'];
+
+        $user = auth()->user();
+        $organ_id = auth()->id();
+        $formerPassword = $user->getAuthPassword();
+        if (Hash::check($oldPassword, $formerPassword)) {
+            // 对比旧密码的是否与当前一致
+            $organUpdate = User::where('id', $organ_id)->update(['password' => bcrypt($password)]);
+            if ($organUpdate) {
+                return $this->success();
+            }
+            return $this->error('修改失败');
+        }
+        return $this->error('旧密码有误');
+
+    }
+
+    /**
+     * 管理员删除用户
+     * @Author raku
+     *
+     * @param User $user
+     * @return JsonResponse
+     */
+    public function destroy(User $user): JsonResponse
+    {
+        $user->delete();
+        return $this->success();
     }
 
     protected function respondWithToken($token): JsonResponse
