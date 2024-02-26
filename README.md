@@ -4,22 +4,28 @@ The framework, built on Laravel 9, seamlessly integrates Permission management, 
 
 ## Deployment
 1. Update .env Configuration:
-    ```
+   ```bash
     APP_DEBUG=false
    ```
-2. Optimize Autoloading:
+   Then:
+   Write file to .gitignore
+2. Update Laravel Kay
+   ```bash
+   php artisan key:generate
+   ```
+3. Optimize Autoloading:
    ```bash
    composer install --optimize-autoloader --no-dev
    ```
-3. Reset JWT:
+4. Reset JWT:
    ```bash
    php artisan jwt:secret
    ```
-4. Initialize User Roles and Permissions:
+5. Initialize User Roles and Permissions:
    ```bash
    php artisan db:seed RoleAndPermissionSeeder
    ```
-5. Seed Departments:
+6. Seed Departments:
    ```bash
    php artisan db:seed DepartmentsTableSeeder
    ```
