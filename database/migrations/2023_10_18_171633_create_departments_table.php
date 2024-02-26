@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('parent_id')->nullable()->default(0); // 上级部门
             $table->timestamps();
         });
+        Illuminate\Support\Facades\DB::statement("ALTER TABLE `departments` COMMENT='部门表'");
     }
 
     /**

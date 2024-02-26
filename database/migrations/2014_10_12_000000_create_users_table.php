@@ -31,7 +31,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
-        DB::statement("ALTER TABLE `users` COMMENT='用户表'"); // 表注释
+        Illuminate\Support\Facades\DB::statement("ALTER TABLE `users` COMMENT='用户表'"); // 表注释
     }
 
     /**

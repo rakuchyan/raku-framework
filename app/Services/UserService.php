@@ -9,7 +9,7 @@ namespace App\Services;
 /**
  * service 处理逻辑
  */
-class DemoService
+class UserService
 {
 
 }
