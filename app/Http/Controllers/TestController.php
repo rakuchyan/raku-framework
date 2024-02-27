@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Storage;
 
 class TestController extends Controller
 {
-    use  RestfulResponse;
-
     public function __construct()
     {
         // 仅可访问

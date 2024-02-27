@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\RestfulResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -10,7 +11,7 @@ use Illuminate\Routing\ControllerMiddlewareOptions;
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, RestfulResponse;
 
     const PAGE_FIRST = 1;
     const PER_PAGE = 10;

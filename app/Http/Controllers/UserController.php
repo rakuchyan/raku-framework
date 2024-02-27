@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AdminUserType;
 use App\Http\Requests\User\QueryById;
 use App\Imports\UserImport;
 use App\Models\User;
@@ -10,12 +11,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Enum;
 use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
-    use RestfulResponse;
-
     public const ADMIN_LOG_NAMES = [
         'login' => '登录',
         'logout' => '注销',
@@ -48,7 +48,7 @@ class UserController extends Controller
         $user = auth()->user();
 
         // 部门
-        $user->department = $user->loadMissing(['department:id,name,parent_id','department.parent:id,name']);
+        $user->department = $user->loadMissing(['department:id,name,parent_id', 'department.parent:id,name']);
 
         // 当前用户权限
         $user->role_name = $user->getRoleNames();
@@ -65,6 +65,7 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $rules = [
+            'user_type' => ['required', new Enum(AdminUserType::class)],
             'account' => 'required|string',
             'password' => 'required|string'
         ];
@@ -73,7 +74,7 @@ class UserController extends Controller
         /**
          * @var User $user
          */
-        if (!$userInfo = User::query()->where(['account' => $validated['account']])->first()) {
+        if (!$userInfo = User::query()->where(['account' => $validated['account'], 'user_type' => $validated['user_type']])->first()) {
             return $this->error('用户不存在');
         }
 
@@ -90,7 +91,7 @@ class UserController extends Controller
             // 给登录日志用
             Auth::onceUsingId($userInfo->id);
 
-            return $this->respondWithToken($token);
+            return $this->respondWithToken($token, $userInfo);
         } catch (\Exception $exception) {
             info($exception->getMessage());
 
@@ -200,11 +201,26 @@ class UserController extends Controller
         return $this->success();
     }
 
-    protected function respondWithToken($token): JsonResponse
+    protected function respondWithToken($token, $user): JsonResponse
     {
+        // return $this->success([
+        //     'token' => 'Bearer ' . $token,
+        //     'expires_in' => auth('api')->factory()->getTTL(7200)
+        // ]);
+
+        // 当前用户权限
+        $user->role_name = $user->getRoleNames();
+        $user->all_permissions = $user->getAllPermissions()
+            ->map(function ($v) {
+                return $v->only(['id', 'name', 'name_zh']);
+            })->toArray();
+        // 隐藏角色
+        $user->makeHidden(['permissions', 'roles']);
+
         return $this->success([
+            'user' => $user,
             'token' => 'Bearer ' . $token,
-            'expires_in' => auth('api')->factory()->getTTL(7200)
+            'expires_in' => auth('api')->factory()->getTTL() * 60
         ]);
     }
 }
