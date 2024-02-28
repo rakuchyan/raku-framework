@@ -5,11 +5,13 @@ namespace App\Exceptions;
 use App\Traits\RestfulResponse;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Throwable;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
@@ -76,6 +78,8 @@ class Handler extends ExceptionHandler
         if ($e instanceof ValidationException) {
             $errorList = $e->validator->getMessageBag()->getMessages();
             return $this->error(head(head($errorList)), 422, ['error' => array_keys($errorList)]);
+        } else if ($e instanceof RouteNotFoundException) {
+            return $this->error('路由不存在', 404);
         } else if ($e instanceof ModelNotFoundException) {
             return $this->error('数据不存在', 404);
         } else if ($e instanceof AuthenticationException) {
@@ -89,6 +93,8 @@ class Handler extends ExceptionHandler
         } else if ($e instanceof \ErrorException) {
             return $this->error('系统错误' . $e->getMessage(), 500);
         } else if ($e instanceof \Error) {
+            return $this->error('系统错误' . $e->getMessage(), 500);
+        } else if ($e instanceof QueryException) {
             return $this->error('系统错误' . $e->getMessage(), 500);
         }
 
