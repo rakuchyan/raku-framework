@@ -30,4 +30,9 @@ class Controller extends BaseController
     {
         return $this->middleware('permission:' . implode('|', is_array($permission) ? $permission : func_get_args()));
     }
+
+    public function hasRoleOr($role): ControllerMiddlewareOptions
+    {
+        return $this->middleware('role:' . implode('|', is_array($role) ? $role : func_get_args()));
+    }
 }

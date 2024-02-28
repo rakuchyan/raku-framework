@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\AdminUserType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,6 +14,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 /**
  * 后台账号 三个端通过字段 user_type 区分
+ * @property AdminUserType user_type
  */
 class AdminUser extends Authenticatable implements JWTSubject
 {
@@ -30,8 +32,9 @@ class AdminUser extends Authenticatable implements JWTSubject
     ];
 
     protected $casts = [
-        'created_at',
-        'updated_at',
+        'user_type' => AdminUserType::class,
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     public function getJWTIdentifier()

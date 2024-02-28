@@ -39,6 +39,7 @@ class RouteServiceProvider extends ServiceProvider
 
             // 增加后台路由模块
             Route::prefix('admin')
+                ->middleware('admin')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/admin.php'));
         });

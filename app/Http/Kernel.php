@@ -55,6 +55,7 @@ class Kernel extends HttpKernel
         'admin' => [
             AcceptHeader::class, // 强制 json header 头
             AdminActionLog::class, // 日志
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]
     ];
 

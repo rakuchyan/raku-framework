@@ -220,7 +220,7 @@ class UserController extends Controller
         return $this->success([
             'user' => $user,
             'token' => 'Bearer ' . $token,
-            'expires_in' => auth('api')->factory()->getTTL() * 60
+            'expires_in' => auth('api')->factory()->getTTL()
         ]);
     }
 }
