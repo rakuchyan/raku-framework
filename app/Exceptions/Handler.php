@@ -78,7 +78,7 @@ class Handler extends ExceptionHandler
         if ($e instanceof ValidationException) {
             $errorList = $e->validator->getMessageBag()->getMessages();
             return $this->error(head(head($errorList)), 422, ['error' => array_keys($errorList)]);
-        } else if ($e instanceof RouteNotFoundException) {
+        } else if ($e instanceof RouteNotFoundException || $e instanceof \BadMethodCallException) {
             return $this->error('路由不存在', 404);
         } else if ($e instanceof ModelNotFoundException) {
             return $this->error('数据不存在', 404);
