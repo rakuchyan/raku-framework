@@ -13,5 +13,6 @@ Route::any('test', [TestController::class, 'test']);
 Route::get('roles', [RoleController::class, 'index']);
 
 Route::middleware(['auth:admin', 'check.admin.user'])->group(function () {
-
+    // 用户相关
+    Route::group([], function () {});
 });

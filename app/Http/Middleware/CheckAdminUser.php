@@ -22,7 +22,7 @@ class CheckAdminUser
 
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::user()->status == AdminUserStatus::Disabled) {
+        if (Auth::user()->status == AdminUserStatus::Disabled->value) {
             return $this->error('您的账号已被禁用', 401);
         }
 

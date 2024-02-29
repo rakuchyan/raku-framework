@@ -125,10 +125,12 @@ class User extends Authenticatable implements JWTSubject
     {
         try {
             if ($start) {
-                $builder->where('created_at', '>=', Carbon::parse($start, 'PRC')->utc());
+                // $builder->where('created_at', '>=', Carbon::parse($start, 'PRC')->utc()->startOfDay());
+                // 根据服务器时间调整
+                $builder->where('created_at', '>=', Carbon::parse($start)->startOfDay());
             }
             if ($end) {
-                $builder->where('created_at', '<=', Carbon::parse($end, 'PRC')->utc());
+                $builder->where('created_at', '<=', Carbon::parse($end, 'PRC')->utc()->endOfDay());
             }
         } catch (\Throwable $exception) {
         }
