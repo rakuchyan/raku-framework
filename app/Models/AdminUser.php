@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Enums\AdminUserStatus;
 use App\Enums\AdminUserType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -56,5 +58,13 @@ class AdminUser extends Authenticatable implements JWTSubject
     public function logs(): HasMany
     {
         return $this->hasMany(AdminLog::class, 'merchant_id');
+    }
+
+    public function disable(AdminUser $user): JsonResponse
+    {
+        $user->status = $user->status == AdminUserStatus::Disabled ? AdminUserStatus::Activated : AdminUserStatus::Disabled;
+        $user->save();
+
+        return $this->success();
     }
 }
