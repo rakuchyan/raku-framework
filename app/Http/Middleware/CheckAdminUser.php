@@ -7,8 +7,8 @@
 namespace App\Http\Middleware;
 
 use App\Enums\AdminUserStatus;
+use App\Models\AdminUser;
 use Closure;
-use App\Utils\CommonUtil;
 use App\Traits\RestfulResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,14 +22,14 @@ class CheckAdminUser
 
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::user()->status == AdminUserStatus::Disabled->value) {
+        /**
+         * @var $user AdminUser
+         */
+        $user = Auth::user();
+        if ($user->status == AdminUserStatus::Disabled) {
             return $this->error('您的账号已被禁用', 401);
         }
 
-        $response = $next($request);
-
-        CommonUtil::curlCommand($request);
-
-        return $response;
+        return $next($request);
     }
 }

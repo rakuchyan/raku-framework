@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\AcceptHeader;
 use App\Http\Middleware\AdminActionLog;
+use App\Http\Middleware\BuildCurlLog;
 use App\Http\Middleware\CheckAdminUser;
 use App\Http\Middleware\CheckUser;
 use App\Http\Middleware\UserMiddleware;
@@ -50,6 +51,7 @@ class Kernel extends HttpKernel
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            BuildCurlLog::class,
         ],
 
         'admin' => [

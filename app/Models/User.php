@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -51,10 +52,8 @@ class User extends Authenticatable implements JWTSubject
     protected $casts = [
         'created_at',
         'updated_at',
+        'status' => UserStatusEnum::class,
     ];
-
-    const STATUS_NORMAL = 1;
-    const STATUS_DISABLED = 2;
 
     /**
      * Interact with the user's first name.

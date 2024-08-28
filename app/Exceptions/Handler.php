@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Constants\ErrorCode;
 use App\Traits\RestfulResponse;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -74,8 +75,42 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e)
     {
         // dd( get_class($e));
-        // 参数验证异常
+
+        // 正式环境需要去敏感
+        if (!config('app.debug')) {
+            if ($e instanceof QueryException) {
+                return $this->error('数据库连接错误', 500, $e);
+            }
+        }
+
+        // validate 参数验证
         if ($e instanceof ValidationException) {
+            $errorList = $e->validator->getMessageBag()->getMessages();
+            return $this->error(head(head($errorList)), 422, ['error' => array_keys($errorList)]);
+        }
+
+        if ($e instanceof RouteNotFoundException || $e instanceof \BadMethodCallException) {
+            return $this->error('路由不存在', 404);
+        }
+
+        if ($e instanceof ModelNotFoundException) {
+            return $this->error('数据不存在', 404);
+        }
+
+        if ($e instanceof AuthenticationException || $e instanceof TokenExpiredException || $e instanceof TokenInvalidException) {
+            return $this->error('登录信息无效或校验失败', 401);
+        }
+
+        if ($e instanceof HttpException) {
+            return $this->response($e->getMessage(), [], $e->getStatusCode());
+        }
+
+        if ($e instanceof \ErrorException || $e instanceof \Error) {
+            return $this->error('系统错误', 500, $e);
+        }
+
+        // 参数验证异常
+        /*if ($e instanceof ValidationException) {
             $errorList = $e->validator->getMessageBag()->getMessages();
             return $this->error(head(head($errorList)), 422, ['error' => array_keys($errorList)]);
         } else if ($e instanceof RouteNotFoundException || $e instanceof \BadMethodCallException) {
@@ -96,7 +131,7 @@ class Handler extends ExceptionHandler
             return $this->error('系统错误' . $e->getMessage(), 500);
         } else if ($e instanceof QueryException) {
             return $this->error('系统错误' . $e->getMessage(), 500);
-        }
+        }*/
 
         return parent::render($request, $e);
     }

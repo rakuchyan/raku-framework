@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Enums\UserStatusEnum;
 use App\Models\Department;
 use App\Models\Role;
 use App\Models\User;
@@ -48,7 +49,7 @@ class UserImport implements ToModel, WithHeadingRow, WithMultipleSheets
 
         $filteredData['department_id'] = $department->id;
         $filteredData['employee_id'] = $filteredData['employee'];
-        $filteredData['status'] = User::STATUS_NORMAL;
+        $filteredData['status'] = UserStatusEnum::Activated;
         $filteredData['password'] = bcrypt(123456);
 
         $filteredData = Arr::except($filteredData, ['department', 'employee', 'role']);

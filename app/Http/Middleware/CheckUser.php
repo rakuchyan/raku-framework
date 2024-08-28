@@ -8,7 +8,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\Models\User;
-use App\Utils\CommonUtil;
 use App\Traits\RestfulResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,14 +21,17 @@ class CheckUser
 
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::user()->status == User::STATUS_DISABLED) {
+        /**
+         * @var $user User
+         */
+        $user = Auth::user();
+        if (!$user instanceof User) {
+            return $this->error('用户登录token无效或已过期', 401);
+        }
+        if ($user->status == UserStatusEnum::Disabled) {
             return $this->error('您的账号已被禁用', 401);
         }
 
-        $response = $next($request);
-
-        CommonUtil::curlCommand($request);
-
-        return $response;
+        return $next($request);
     }
 }

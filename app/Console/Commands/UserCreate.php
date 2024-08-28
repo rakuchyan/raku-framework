@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\UserStatusEnum;
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Console\Command;
@@ -46,13 +47,13 @@ class UserCreate extends Command
          */
         DB::beginTransaction();
         try {
-            $user =User::query()
+            $user = User::query()
                 ->create([
                     'account' => $account,
                     'name' => $account,
                     'password' => bcrypt($password),
                     'email' => $email,
-                    'status' =>User::STATUS_NORMAL,
+                    'status' => UserStatusEnum::Activated,
                 ]);
             $user->syncRoles($askRoles);
 
