@@ -2,7 +2,6 @@
 
 namespace App\Exceptions;
 
-use App\Constants\ErrorCode;
 use App\Traits\RestfulResponse;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -65,7 +64,7 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @Author raku
+     *
      *
      * @param $request
      * @param Throwable $e

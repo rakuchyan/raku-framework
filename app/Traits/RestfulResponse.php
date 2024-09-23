@@ -62,8 +62,6 @@ trait RestfulResponse
 
     /**
      *
-     * @Author raku
-     *
      * @param $data
      * @param string $message
      * @param int $status
@@ -79,9 +77,6 @@ trait RestfulResponse
     }
 
     /**
-     *
-     *
-     * @Author raku
      *
      * @param int $code
      * @param string $message

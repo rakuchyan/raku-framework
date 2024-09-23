@@ -51,7 +51,6 @@ class AdminUser extends Authenticatable implements JWTSubject
 
     /**
      * 商户日志
-     * @Author raku
      *
      * @return HasMany
      */

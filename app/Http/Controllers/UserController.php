@@ -24,7 +24,6 @@ class UserController extends Controller
     /**
      * 用户详情，request 用法demo
      *
-     * @Author raku
      *
      * @param QueryById $request
      * @return void
@@ -36,7 +35,7 @@ class UserController extends Controller
 
     /**
      * 个人用户信息
-     * @Author raku
+     *
      *
      * @return JsonResponse
      */
@@ -133,7 +132,7 @@ class UserController extends Controller
 
     /**
      * 个人修改信息
-     * @Author raku
+     *
      *
      * @param Request $request
      * @return JsonResponse
@@ -154,7 +153,7 @@ class UserController extends Controller
 
     /**
      * 个人重置密码
-     * @Author raku
+     *
      *
      * @param Request $request
      * @return JsonResponse
@@ -190,7 +189,7 @@ class UserController extends Controller
 
     /**
      * 管理员删除用户
-     * @Author raku
+     *
      *
      * @param User $user
      * @return JsonResponse

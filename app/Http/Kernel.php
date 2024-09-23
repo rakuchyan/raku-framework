@@ -7,7 +7,6 @@ use App\Http\Middleware\AdminActionLog;
 use App\Http\Middleware\BuildCurlLog;
 use App\Http\Middleware\CheckAdminUser;
 use App\Http\Middleware\CheckUser;
-use App\Http\Middleware\UserMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Spatie\Permission\Middlewares\PermissionMiddleware;
 use Spatie\Permission\Middlewares\RoleMiddleware;

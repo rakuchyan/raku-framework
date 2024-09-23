@@ -90,10 +90,9 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * 添加时间
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param mixed $start 开始时间
-     * @param mixed $end 结束时间
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param $query
+     * @param $start
+     * @param $end
      */
     public function scopeCreatedAtTimeRange($query, $start, $end)
     {
@@ -113,7 +112,6 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * queryBuilder
-     * @Author raku
      *
      * @param Builder $builder
      * @param $start

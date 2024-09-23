@@ -6,6 +6,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\UserStatusEnum;
 use Closure;
 use App\Models\User;
 use App\Traits\RestfulResponse;
