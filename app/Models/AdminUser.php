@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\AdminUserStatus;
+use App\Enums\AdminUserActive;
 use App\Enums\AdminUserType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -30,7 +30,6 @@ class AdminUser extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password',
         'deleted_at',
-        'token',
     ];
 
     protected $casts = [
@@ -61,7 +60,7 @@ class AdminUser extends Authenticatable implements JWTSubject
 
     public function disable(AdminUser $user): JsonResponse
     {
-        $user->status = $user->status == AdminUserStatus::Disabled ? AdminUserStatus::Activated : AdminUserStatus::Disabled;
+        $user->active = $user->active == AdminUserActive::Disabled ? AdminUserActive::Activated : AdminUserActive::Disabled;
         $user->save();
 
         return $this->success();

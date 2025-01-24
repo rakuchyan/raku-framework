@@ -6,7 +6,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Enums\AdminUserStatus;
+use App\Enums\AdminUserActive;
 use App\Models\AdminUser;
 use Closure;
 use App\Traits\RestfulResponse;
@@ -26,8 +26,16 @@ class CheckAdminUser
          * @var $user AdminUser
          */
         $user = Auth::user();
-        if ($user->status == AdminUserStatus::Disabled) {
-            return $this->error('您的账号已被禁用', 401);
+        if (!$user instanceof AdminUser) {
+            $this->error(__('login_token_invalid'), 401);
+        }
+
+        if ($user->status == AdminUserActive::Disabled) {
+            return $this->error(__('user_disable'), 401);
+        }
+
+        if ($user->deleted_at) {
+            return $this->error(__('user_disable'), 401);
         }
 
         return $next($request);

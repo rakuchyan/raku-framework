@@ -1,6 +1,6 @@
 ## About Framework
 
-The framework, built on Laravel 9, seamlessly integrates Permission management, providing a comprehensive RBAC solution that covers functionalities like login, registration, and user management. Additionally, it offers a RESTful response return format, enhancing the API interaction experience.
+The framework, built on Laravel 10, seamlessly integrates Permission management, providing a comprehensive RBAC solution that covers functionalities like login, registration, and user management. Additionally, it offers a RESTful response return format, enhancing the API interaction experience.
 
 ## Deployment
 1. Update .env Configuration:

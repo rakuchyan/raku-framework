@@ -5,16 +5,6 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
 
-if (!function_exists('redis')) {
-    /**
-     * @return mixed|\Redis
-     */
-    function redis(): \Redis
-    {
-        return Redis::connection()->client();
-    }
-}
-
 if (!function_exists('strMask')) {
 
     /**

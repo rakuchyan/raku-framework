@@ -48,7 +48,6 @@ class UserImport implements ToModel, WithHeadingRow, WithMultipleSheets
         }
 
         $filteredData['department_id'] = $department->id;
-        $filteredData['employee_id'] = $filteredData['employee'];
         $filteredData['status'] = UserStatusEnum::Activated;
         $filteredData['password'] = bcrypt(123456);
 

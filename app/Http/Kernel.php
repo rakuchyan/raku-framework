@@ -6,7 +6,7 @@ use App\Http\Middleware\AcceptHeader;
 use App\Http\Middleware\AdminActionLog;
 use App\Http\Middleware\BuildCurlLog;
 use App\Http\Middleware\CheckAdminUser;
-use App\Http\Middleware\CheckUser;
+use App\Http\Middleware\CheckApiUser;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Spatie\Permission\Middlewares\PermissionMiddleware;
 use Spatie\Permission\Middlewares\RoleMiddleware;
@@ -51,12 +51,14 @@ class Kernel extends HttpKernel
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             BuildCurlLog::class,
+            \App\Http\Middleware\SetLocale::class,
         ],
 
         'admin' => [
             AcceptHeader::class, // 强制 json header 头
             AdminActionLog::class, // 日志
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\SetLocale::class,
         ]
     ];
 
@@ -84,7 +86,7 @@ class Kernel extends HttpKernel
         'permission' => PermissionMiddleware::class,
 
         // 验证用户
-        'check.user' => CheckUser::class,
+        'check.api.user' => CheckApiUser::class,
         'check.admin.user' => CheckAdminUser::class,
 
     ];

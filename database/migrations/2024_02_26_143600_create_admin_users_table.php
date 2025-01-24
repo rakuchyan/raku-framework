@@ -14,23 +14,23 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('admin_users', function (Blueprint $table) {
             $table->id();
-            $table->string('account', 100)->comment('账号')->unique('ux_account');
+            $table->string('account', 100)->comment('账号');
             $table->string('name',100)->comment('姓名');
+            $table->string('nickname',100)->comment('昵称');
+            $table->string('phone', 50)->comment('手机号');
             $table->string('email')->default('')->nullable()->comment('邮箱');
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->comment('密码');
             $table->string('avatar')->nullable()->default('')->comment('头像');
             $table->integer('department_id')->default(0)->comment('部门');
-            $table->string('employee_id', 100)->default('')->comment('工号');
-            $table->tinyInteger('status')->default(1)->comment('状态 1正常 2禁用');
-            $table->text('token')->nullable()->comment('token');
+            $table->boolean('active')->default(true)->comment('是否启用');
+            $table->boolean('is_manager')->default(false)->comment('是否为部门经理');
 
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
-            $table->comment('用户表');
+            $table->comment('后台用户表');
         });
     }
 
@@ -41,6 +41,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('admin_users');
     }
 };

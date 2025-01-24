@@ -1,0 +1,10 @@
+{
+    "get_verification_code": "Please get the verification code first",
+    "verification_code_expired": "The verification code has expired, please retrieve it again",
+    "an_error_occurred": "An error occurred",
+    "user_not_found": "User not found",
+    "user_disable": "Your account has been disabled.",
+    "login_token_invalid": "The user’s login token is invalid or has expired.",
+    "incorrect_password": "Incorrect password.",
+    "operation_failed": "Operation failed. Please try again later."
+}

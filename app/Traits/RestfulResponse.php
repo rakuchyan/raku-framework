@@ -87,7 +87,7 @@ trait RestfulResponse
     {
         $msgpack = [
             'code' => $code,
-            'message' => $message,
+            'msg' => $message,
         ];
         if (!($data instanceof stdClass) && empty($data)) {
             $msgpack['data'] = new stdClass();

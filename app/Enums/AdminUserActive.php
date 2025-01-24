@@ -8,7 +8,7 @@ namespace App\Enums;
 
 use Illuminate\Support\Arr;
 
-enum AdminUserStatus: int
+enum AdminUserActive: int
 {
     case Activated = 1;
     case Disabled = 2;
@@ -21,8 +21,8 @@ enum AdminUserStatus: int
     public static function list(): array
     {
         return [
-            self::Activated->value => '已启用',
-            self::Disabled->value => '已禁用',
+            self::Activated->value => '启用',
+            self::Disabled->value => '禁用',
         ];
     }
 }

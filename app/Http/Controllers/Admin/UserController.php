@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Enums\AdminUserType;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\User\QueryById;
 use App\Imports\UserImport;
 use App\Models\User;
-use App\Traits\RestfulResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Enum;
 use Maatwebsite\Excel\Facades\Excel;
@@ -74,11 +74,11 @@ class UserController extends Controller
          * @var User $user
          */
         if (!$userInfo = User::query()->where(['account' => $validated['account'], 'user_type' => $validated['user_type']])->first()) {
-            return $this->error('用户不存在');
+            return $this->error(__('user_not_found'));
         }
 
         if (!$token = auth('api')->attempt($validated)) {
-            return $this->error('密码错误');
+            return $this->error(__('incorrect_password'));
         }
 
         try {
@@ -94,7 +94,7 @@ class UserController extends Controller
         } catch (\Exception $exception) {
             info($exception->getMessage());
 
-            return $this->error('操作失败，请稍后重试');
+            return $this->error(__('operation_failed'));
         }
 
         // $user = User::query()->find(1);
@@ -112,7 +112,7 @@ class UserController extends Controller
     public function logout()
     {
         $id = Auth::id();
-        auth('api')->logout();
+        auth('admin')->logout();
         Auth::onceUsingId($id);
         return $this->success();
     }
@@ -126,7 +126,7 @@ class UserController extends Controller
             }
         } catch (\Throwable $e) {
             info('导入失败.' . $e->getMessage());
-            return $this->error('导入失败');
+            return $this->error(__('operation_failed'));
         }
     }
 
@@ -181,9 +181,9 @@ class UserController extends Controller
             if ($organUpdate) {
                 return $this->success();
             }
-            return $this->error('修改失败');
+            return $this->error(__('operation_failed'));
         }
-        return $this->error('旧密码有误');
+        return $this->error(__('incorrect_password'));
 
     }
 

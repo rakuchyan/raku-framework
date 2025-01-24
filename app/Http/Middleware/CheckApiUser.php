@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 /**
  * 用户端中间件
  */
-class CheckUser
+class CheckApiUser
 {
     use RestfulResponse;
 
@@ -27,10 +27,10 @@ class CheckUser
          */
         $user = Auth::user();
         if (!$user instanceof User) {
-            return $this->error('用户登录token无效或已过期', 401);
+            return $this->error(__('login_token_invalid'), 401);
         }
         if ($user->status == UserStatusEnum::Disabled) {
-            return $this->error('您的账号已被禁用', 401);
+            return $this->error(__('user_disable'), 401);
         }
 
         return $next($request);

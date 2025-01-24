@@ -78,7 +78,7 @@ class Handler extends ExceptionHandler
         // 正式环境需要去敏感
         if (!config('app.debug')) {
             if ($e instanceof QueryException) {
-                return $this->error('数据库连接错误', 500, $e);
+                return $this->error('Database connection error.', 500, $e);
             }
         }
 
@@ -89,15 +89,15 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof RouteNotFoundException || $e instanceof \BadMethodCallException) {
-            return $this->error('路由不存在', 404);
+            return $this->error('The route does not exist.', 404);
         }
 
         if ($e instanceof ModelNotFoundException) {
-            return $this->error('数据不存在', 404);
+            return $this->error('The data does not exist.', 404);
         }
 
         if ($e instanceof AuthenticationException || $e instanceof TokenExpiredException || $e instanceof TokenInvalidException) {
-            return $this->error('登录信息无效或校验失败', 401);
+            return $this->error('Invalid login information or verification failed.', 401);
         }
 
         if ($e instanceof HttpException) {
@@ -105,7 +105,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof \ErrorException || $e instanceof \Error) {
-            return $this->error('系统错误', 500, $e);
+            return $this->error('System error.', 500, $e);
         }
 
         // 参数验证异常

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\AdminUserStatus;
+use App\Enums\AdminUserActive;
 use App\Enums\AdminUserType;
 use App\Models\Attachment;
 use Carbon\Carbon;
@@ -14,7 +14,7 @@ use Illuminate\Support\Arr;
 class CommonController extends Controller
 {
     protected array $dict = [
-        'admin_user_status' => AdminUserStatus::class,
+        'admin_user_active' => AdminUserActive::class,
         'admin_user_type' => AdminUserType::class,
     ];
 
