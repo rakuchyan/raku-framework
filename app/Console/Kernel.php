@@ -16,6 +16,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+
+        // Telescope 缓存清理
+        $schedule->command('telescope:clear-daily')->dailyAt('03:00')->runInBackground();
     }
 
     /**
