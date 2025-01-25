@@ -5,6 +5,7 @@ The framework, built on Laravel 10, seamlessly integrates Permission management,
 ## Deployment
 1. Update .env Configuration:
    ```bash
+    APP_ENV=Production
     APP_DEBUG=false
    ```
    Then:
