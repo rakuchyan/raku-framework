@@ -7,7 +7,7 @@ use App\Enums\AdminUserType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Foundation\Auth\User as Authenticate;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -18,7 +18,7 @@ use Spatie\Permission\Traits\HasRoles;
  * 后台账号 三个端通过字段 user_type 区分
  * @property AdminUserType user_type
  */
-class AdminUser extends Authenticatable implements JWTSubject
+class AdminUser extends Authenticate implements JWTSubject
 {
     // use HasApiTokens, Notifiable;
     use HasFactory, SoftDeletes, HasRoles;

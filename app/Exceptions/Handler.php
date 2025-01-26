@@ -97,7 +97,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof AuthenticationException || $e instanceof TokenExpiredException || $e instanceof TokenInvalidException) {
-            return $this->error('Invalid login information or verification failed.', 401);
+            return $this->error('Invalid login information or verification failed.', 401, [], 401);
         }
 
         if ($e instanceof HttpException) {
