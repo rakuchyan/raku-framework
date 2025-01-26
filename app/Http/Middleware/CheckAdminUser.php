@@ -27,15 +27,15 @@ class CheckAdminUser
          */
         $user = Auth::user();
         if (!$user instanceof AdminUser) {
-            $this->error(__('login_token_invalid'), 401);
+            $this->error(__('login_token_invalid'), 401, [], 401);
         }
 
         if ($user->status == AdminUserActive::Disabled) {
-            return $this->error(__('user_disable'), 401);
+            return $this->error(__('user_disable'), 401, [], 401);
         }
 
         if ($user->deleted_at) {
-            return $this->error(__('user_disable'), 401);
+            return $this->error(__('user_disable'), 401, [], 401);
         }
 
         return $next($request);
