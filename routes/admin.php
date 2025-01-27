@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 Route::any('test', [TestController::class, 'test']);
 Route::get('roles', [RoleController::class, 'index']);
 Route::get('dictionaries', [CommonController::class, 'dictionaries']);
+Route::get('enums/{type}', [CommonController::class, 'getEnums']);
 Route::get('upload', [CommonController::class, 'upload']);
 
 

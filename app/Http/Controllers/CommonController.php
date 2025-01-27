@@ -10,6 +10,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Lang;
 
 class CommonController extends Controller
 {
@@ -17,6 +19,29 @@ class CommonController extends Controller
         'admin_user_active' => AdminUserActive::class,
         'admin_user_type' => AdminUserType::class,
     ];
+
+    public function getEnums(Request $request, string $type): JsonResponse
+    {
+        if (!Lang::has('enums.' . $type, App::getLocale())) {
+            return $this->error(__('enum_type_not_found'));
+        }
+
+        $enums = Lang::get('enums.' . $type, [], App::getLocale());
+
+        $formattedEnums = [];
+        foreach ($enums as $key => $value) {
+            $formattedEnums[] = [
+                'key' => $key,
+                'value' => $value,
+            ];
+        }
+
+        return $this->success([
+            'type' => $type,
+            'locale' => App::getLocale(),
+            'enums' => $formattedEnums,
+        ]);
+    }
 
     public function dictionaries(): JsonResponse
     {

@@ -6,5 +6,6 @@
     "user_disable": "Your account has been disabled.",
     "login_token_invalid": "The user’s login token is invalid or has expired.",
     "incorrect_password": "Incorrect password.",
-    "operation_failed": "Operation failed. Please try again later."
+    "operation_failed": "Operation failed. Please try again later.",
+    "enum_type_not_found": "Enum type not found"
 }
