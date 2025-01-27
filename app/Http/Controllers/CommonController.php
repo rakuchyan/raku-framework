@@ -20,13 +20,39 @@ class CommonController extends Controller
         'admin_user_type' => AdminUserType::class,
     ];
 
-    public function getEnums(Request $request, string $type): JsonResponse
+    public function getAllEnums(Request $request): JsonResponse
     {
-        if (!Lang::has('enums.' . $type, App::getLocale())) {
+        $locale = App::getLocale();
+
+        $enums = Lang::get('enums', [], $locale);
+
+        if (!is_array($enums)) {
+            return $this->error(__('enum_data_not_found'));
+        }
+
+        $formattedEnums = [];
+        foreach ($enums as $tag => $enum) {
+            $formattedEnums[] = [
+                'tag' => $tag,
+                'enums' => collect($enum)->map(function ($value, $key) {
+                    return ['key' => $key, 'value' => $value];
+                })->toArray(),
+            ];
+        }
+
+        return $this->success([
+            'locale' => $locale,
+            'enums' => $formattedEnums,
+        ]);
+    }
+
+    public function getEnumsByKey(Request $request, string $tag): JsonResponse
+    {
+        if (!Lang::has('enums.' . $tag, App::getLocale())) {
             return $this->error(__('enum_type_not_found'));
         }
 
-        $enums = Lang::get('enums.' . $type, [], App::getLocale());
+        $enums = Lang::get('enums.' . $tag, [], App::getLocale());
 
         $formattedEnums = [];
         foreach ($enums as $key => $value) {
@@ -37,7 +63,7 @@ class CommonController extends Controller
         }
 
         return $this->success([
-            'type' => $type,
+            'tag' => $tag,
             'locale' => App::getLocale(),
             'enums' => $formattedEnums,
         ]);
