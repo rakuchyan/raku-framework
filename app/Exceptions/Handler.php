@@ -88,8 +88,12 @@ class Handler extends ExceptionHandler
             return $this->error(head(head($errorList)), 422, ['error' => array_keys($errorList)]);
         }
 
-        if ($e instanceof RouteNotFoundException || $e instanceof \BadMethodCallException) {
-            return $this->error('The route does not exist.', 404);
+        if ($e instanceof \BadMethodCallException) {
+            return $this->error($e->getMessage(), 404);
+        }
+
+        if ($e instanceof RouteNotFoundException) {
+            return $this->error($e->getMessage(), 404);
         }
 
         if ($e instanceof ModelNotFoundException) {
