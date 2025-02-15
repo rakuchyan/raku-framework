@@ -75,66 +75,74 @@ class Handler extends ExceptionHandler
     {
         // dd( get_class($e));
 
-        // 正式环境需要去敏感
-        if (!config('app.debug')) {
-            if ($e instanceof QueryException) {
-                return $this->error('Database connection error.', 500, $e);
+        // 生产环境下的数据库错误处理
+        if (!config('app.debug') && $e instanceof QueryException) {
+            Log::info($e->getMessage());
+            return $this->error('Database connection error.', 500, $e);
+        }
+
+        // 根据异常类型返回对应的错误响应
+        $errorResponses = [
+            ValidationException::class => function ($e) {
+                $errorList = $e->validator->getMessageBag()->getMessages();
+                return $this->error(head(head($errorList)), 422, ['error' => array_keys($errorList)]);
+            },
+
+            \BadMethodCallException::class => function ($e) {
+                $message = !config('app.debug') ? 'Bad method call exception.' : $e->getMessage();
+                Log::info($e->getMessage());
+                return $this->error($message, 400);
+            },
+
+            RouteNotFoundException::class => function ($e) {
+                $message = !config('app.debug') ? 'Route not found exception.' : $e->getMessage();
+                Log::info($e->getMessage());
+                return $this->error($message, 404);
+            },
+
+            ModelNotFoundException::class => function ($e) {
+                $message = !config('app.debug') ? 'Model not found exception.' : $e->getMessage();
+                Log::info($e->getMessage());
+                return $this->error($message, 404);
+            },
+
+            NotFoundHttpException::class => function ($e) {
+                $message = !config('app.debug') ? 'Http route not found exception.' : $e->getMessage();
+                Log::info($e->getMessage());
+                return $this->error($message, 404);
+            },
+
+            AuthenticationException::class => function () {
+                return $this->error('Invalid login information or verification failed.', 401);
+            },
+
+            TokenExpiredException::class => function () {
+                return $this->error('Invalid login information or verification failed.', 401);
+            },
+
+            TokenInvalidException::class => function () {
+                return $this->error('Invalid login information or verification failed.', 401);
+            },
+
+            HttpException::class => function ($e) {
+                return $this->response($e->getMessage(), [], $e->getStatusCode());
+            },
+
+            \ErrorException::class => function ($e) {
+                return $this->error('System error.', 500, $e);
+            },
+
+            \Error::class => function ($e) {
+                return $this->error('System error.', 500, $e);
+            }
+        ];
+
+        // 遍历异常类型并处理
+        foreach ($errorResponses as $exceptionClass => $handler) {
+            if ($e instanceof $exceptionClass) {
+                return $handler($e);
             }
         }
-
-        // validate 参数验证
-        if ($e instanceof ValidationException) {
-            $errorList = $e->validator->getMessageBag()->getMessages();
-            return $this->error(head(head($errorList)), 422, ['error' => array_keys($errorList)]);
-        }
-
-        if ($e instanceof \BadMethodCallException) {
-            return $this->error($e->getMessage(), 404);
-        }
-
-        if ($e instanceof RouteNotFoundException) {
-            return $this->error($e->getMessage(), 404);
-        }
-
-        if ($e instanceof ModelNotFoundException) {
-            return $this->error('The data does not exist.', 404);
-        }
-
-        if ($e instanceof AuthenticationException || $e instanceof TokenExpiredException || $e instanceof TokenInvalidException) {
-            return $this->error('Invalid login information or verification failed.', 401, [], 401);
-        }
-
-        if ($e instanceof HttpException) {
-            return $this->response($e->getMessage(), [], $e->getStatusCode());
-        }
-
-        if ($e instanceof \ErrorException || $e instanceof \Error) {
-            return $this->error('System error.', 500, $e);
-        }
-
-        // 参数验证异常
-        /*if ($e instanceof ValidationException) {
-            $errorList = $e->validator->getMessageBag()->getMessages();
-            return $this->error(head(head($errorList)), 422, ['error' => array_keys($errorList)]);
-        } else if ($e instanceof RouteNotFoundException || $e instanceof \BadMethodCallException) {
-            return $this->error('路由不存在', 404);
-        } else if ($e instanceof ModelNotFoundException) {
-            return $this->error('数据不存在', 404);
-        } else if ($e instanceof AuthenticationException) {
-            return $this->error('请先登录', 401);
-        } else if ($e instanceof TokenExpiredException) {
-            return $this->error('登录信息无效', 401);
-        } else if ($e instanceof TokenInvalidException) {
-            return $this->error('登录校验失败', 401);
-        } else if ($e instanceof HttpException) {
-            return $this->response($e->getMessage(), [], $e->getStatusCode());
-        } else if ($e instanceof \ErrorException) {
-            return $this->error('系统错误' . $e->getMessage(), 500);
-        } else if ($e instanceof \Error) {
-            return $this->error('系统错误' . $e->getMessage(), 500);
-        } else if ($e instanceof QueryException) {
-            return $this->error('系统错误' . $e->getMessage(), 500);
-        }*/
 
         return parent::render($request, $e);
     }
