@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('file_name', 255)->default('')->comment('文件名');
             $table->string('file_type', 255)->default('')->comment('文件类型');
             $table->integer('file_size')->default(0)->comment('文件大小，单位字节');
-            $table->timestamp('upload_time')->comment('上传时间');
+            $table->timestamp('upload_time')->nullable()->comment('上传时间');
             $table->text('path')->comment('文件存储路径');
             $table->timestamps();
             $table->softDeletes();
