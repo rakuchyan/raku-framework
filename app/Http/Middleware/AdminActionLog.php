@@ -32,9 +32,14 @@ class AdminActionLog
         $className = Str::before(Route::current()->getActionName(), "@{$function}");
         $name = $this->getName($className, $function);
         // 只记录需要记录的
-        if (!$name) {
+        // if (!$name) {
+        //     return $response;
+        // }
+
+        if (!$name || (isset($content['code']) && $content['code'] !== 200)) {
             return $response;
         }
+
         $user = Auth::guard('admin')->user();
         $data = [
             'url' => $request->url(),
