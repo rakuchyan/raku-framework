@@ -35,7 +35,6 @@ class AdminActionLog
         // if (!$name) {
         //     return $response;
         // }
-
         if (!$name || (isset($content['code']) && $content['code'] !== 200)) {
             return $response;
         }
